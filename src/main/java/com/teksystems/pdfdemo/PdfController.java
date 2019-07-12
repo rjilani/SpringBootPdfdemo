@@ -63,4 +63,26 @@ public class PdfController {
         ResponseEntity<byte[]> response = new ResponseEntity<>(GeneratePdfBox.getReport().toByteArray(), headers, HttpStatus.OK);
         return response;
     }
+
+    /**This is OpenPdf code, see the GeneratePdfOpenPdf.java too
+     *
+     * @return
+     */
+    @RequestMapping(value = "/getpdfopenpdf", method = RequestMethod.GET,
+            produces = MediaType.APPLICATION_PDF_VALUE)
+    public ResponseEntity<InputStreamResource> getOpenPdfReports() {
+
+        List<City> cities = CityService.getCities();
+
+        ByteArrayInputStream bis = GeneratePdfOpenPdf.getOpenPdfReport();
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Content-Disposition", "inline; filename=citiesreport.pdf");
+
+        return ResponseEntity
+                .ok()
+                .headers(headers)
+                .contentType(MediaType.APPLICATION_PDF)
+                .body(new InputStreamResource(bis));
+    }
 }
